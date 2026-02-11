@@ -33,12 +33,7 @@ public class JobController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable int id) {
-        Job job = jobService.getJobById(id);
-        
-        if (job == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(job);
+        return ResponseEntity.ok(jobService.getJobById(id));
     }
 
 

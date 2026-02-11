@@ -1,5 +1,7 @@
 package com.pa.livesinerie.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/community")
 @CrossOrigin
 public class CommunityController {
-    
+    private static final Logger logger = LoggerFactory.getLogger(CommunityController.class);
     private final CommunityServiceImpl communityServiceImpl;
 
     public CommunityController(CommunityServiceImpl communityServiceImpl) {
@@ -21,11 +23,13 @@ public class CommunityController {
     // GET all communities
     @GetMapping()
     public ResponseEntity<List<Community>> getAllCommunity() {
+        logger.info("Receive request to get all community ");
         return ResponseEntity.ok(communityServiceImpl.getAllCommunity());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Community> getCommunityById(@PathVariable Integer id) {
+        logger.info("Receive request to get community by Id");
         return ResponseEntity.ok(communityServiceImpl.getCommunityById(id));
     }
 
@@ -40,14 +44,14 @@ public class CommunityController {
         return ResponseEntity.ok(communityServiceImpl.updateCommunityById(id, community));
     }
 
-@DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCommunity(@PathVariable Integer id) {
         boolean isDeleted = communityServiceImpl.deleteCommunity(id);
         
         if (isDeleted) {
-            return ResponseEntity.ok(true); // Returns 200 OK with 'true'
+            return ResponseEntity.ok(true);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false); // Returns 404 with 'false'
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         }
     }
 }

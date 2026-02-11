@@ -73,33 +73,3 @@ Auth method (password, OAuth, token) must be pluggable
 Identity ≠ Authorization (who you are ≠ what you can do)
 
 If you violate these, your auth system will rot.
-
-
-@RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5173") // allow dev frontend
-public class GeocodeController {
-
-    @GetMapping("/geocode")
-    public Map<String, Double> geocode(@RequestParam String address) {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
-                     UriUtils.encode(address, StandardCharsets.UTF_8);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("User-Agent", "LivesInErie/1.0 (contact@livesinerie.com)");
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.getBody());
-
-        if (root.isArray() && root.size() > 0) {
-            double lat = root.get(0).get("lat").asDouble();
-            double lon = root.get(0).get("lon").asDouble();
-            return Map.of("lat", lat, "lon", lon);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
-        }
-    }
-}

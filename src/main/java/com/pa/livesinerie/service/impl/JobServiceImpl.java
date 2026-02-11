@@ -24,8 +24,9 @@ public class JobServiceImpl implements JobServiceInterface {
         return jobRepository.save(job);
     }
 
+    @Override
     public Job getJobById(int id) {
-        return jobRepository.findById(id).orElseThrow(() -> new RuntimeException(("User with the id does not exists "+ id)));
+        return jobRepository.findById(id).orElseThrow();
     }
 
     @Override
